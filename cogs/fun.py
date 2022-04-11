@@ -2,6 +2,7 @@ import voltage
 import requests
 import random
 from voltage.ext.commands import Cog
+from typing import Sequence
 
 
 def setup(client: voltage.Client) -> Cog:
@@ -17,6 +18,18 @@ def setup(client: voltage.Client) -> Cog:
             title="Meow!",
             description=fact["fact"],
             media=f"https://cataas.com{cat['url']}"
+        )
+
+        await ctx.send(content="#", embed=embed)
+
+    @fun.command(description="Gives you a random cat image with a caption of your choice. Note: Use the backslash to escape newlines, quotation marks, and other special characters.", aliases=["cattosay", "meowsay", "kittysay", "kittensay", "catsay"])
+    async def catsay(ctx, *, caption: str):
+        request = requests.get(f"https://cataas.com/cat/says/{caption}?json=true")
+        kitten = request.json()
+        embed = voltage.SendableEmbed(
+            title="Meow!",
+            description="Here's your caption!",
+            media=f"https://cataas.com{kitten['url']}"
         )
 
         await ctx.send(content="#", embed=embed)
@@ -67,7 +80,7 @@ def setup(client: voltage.Client) -> Cog:
     async def coin_flip(ctx) -> None:
         await ctx.send(f"Your coin landed on **{random.choice(['heads', 'tails'])}**")
 
-    @fun.command(description="Sends a user-provided message. Pretty useless, but it's there.")
+    @fun.command(description="Sends a user-provided message. Pretty useless, but it's there. Note: Use the backslash to escape newlines, quotation marks, and other special characters.")
     async def say(ctx, *, message: str=None) -> None:
         prefix = await ctx.client.get_prefix(ctx.message, ctx.client.prefix)
         if message == None:
