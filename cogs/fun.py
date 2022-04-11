@@ -4,17 +4,10 @@ import random
 from voltage.ext.commands import Cog
 
 
-async def get_prefix(message, client):
-    if message.server is None:
-        return ['r!', client.user.mention+' ', client.user.mention]
-    with open ("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-    return [prefixes.get(str(message.server.id), "-"), client.user.mention+' ', client.user.mention]
-
 def setup(client: voltage.Client) -> Cog:
     fun = Cog("Fun", "Random and fun stuff.")
 
-    @fun.command()
+    @fun.command(description="Gives you a random cat image and fact.", aliases=["catto", "meow", "kitty", "kitten", "cat"])
     async def cat(ctx):
         request = requests.get("https://cataas.com/cat?json=true")
         fact_request = requests.get("https://catfact.ninja/fact")
@@ -27,8 +20,8 @@ def setup(client: voltage.Client) -> Cog:
         )
 
         await ctx.send(content="#", embed=embed)
-    
-    @fun.command()
+
+    @fun.command(description="Gives you a random dog image and fact.", aliases=["doggo", "bark", "puppy", "pupper", "pup", "dog"])
     async def dog(ctx):
         request = requests.get("https://dog.ceo/api/breeds/image/random")
         fact_request = requests.get("https://dog-api.kinduff.com/api/facts")
@@ -41,8 +34,8 @@ def setup(client: voltage.Client) -> Cog:
         )
 
         await ctx.send(content="#", embed=embed)
-    
-    @fun.command()
+
+    @fun.command(description="Gives you a random fox image.", aliases=["foxy", "floof", "fox"])
     async def fox(ctx):
         request = requests.get("https://randomfox.ca/floof/")
         fox = request.json()
@@ -53,8 +46,8 @@ def setup(client: voltage.Client) -> Cog:
         )
 
         await ctx.send(content="#", embed=embed)
-    
-    @fun.command()
+
+    @fun.command(description="Gives you a random duck image.", aliases=["ducky", "quack", "duck"])
     async def duck(ctx):
         request = requests.get("https://random-d.uk/api/v2/random")
         duck = request.json()
@@ -65,16 +58,16 @@ def setup(client: voltage.Client) -> Cog:
         )
 
         await ctx.send(content="#", embed=embed)
-    
-    @fun.command()
+
+    @fun.command(description="Rolls a die for you.", aliases=["die", "dice", "diceroll", "random", "roll"])
     async def roll(ctx, sides: int=6) -> None:
         await ctx.send(f"You rolled a **{random.randint(1, sides)}**")
 
-    @fun.command()
+    @fun.command(description="Flips a coin for you", aliases=["coin", "flip", "coin_flip"])
     async def coin_flip(ctx) -> None:
         await ctx.send(f"Your coin landed on **{random.choice(['heads', 'tails'])}**")
-    
-    @fun.command()
+
+    @fun.command(description="Sends a user-provided message. Pretty useless, but it's there.")
     async def say(ctx, *, message: str=None) -> None:
         prefix = await ctx.client.get_prefix(ctx.message, ctx.client.prefix)
         if message == None:
@@ -82,6 +75,6 @@ def setup(client: voltage.Client) -> Cog:
         elif message.startswith(prefix):
             return await ctx.send("stop ratelimiting me lmfao")
         await ctx.send(message)
-    
-    
+
+
     return fun
