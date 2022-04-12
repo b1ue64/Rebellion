@@ -62,5 +62,4 @@ async def unload(ctx, cog: str):
     client.remove_extension(f"cogs.{cog}")
     await ctx.reply(f"Cog `{cog}` unloaded")
 
-load_dotenv()
-client.run(os.getenv('BOT_TOKEN'))
+client.run(os.environ['BOT_TOKEN'])
